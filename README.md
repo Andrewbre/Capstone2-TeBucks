@@ -192,11 +192,11 @@ Provided
 
 For you to complete
 
-| Request Method | Path                       | Request Body            | Returns        |
-|----------------|----------------------------|-------------------------|----------------|
-| GET            | /api/account/balance       | N/A                     | BigDecimal     |
-| GET            | /api/account/transfers     | N/A                     | List<Transfer> |
-| GET            | /api/transfers/{id}        | N/A                     | Transfer       |
-| POST           | /api/transfers             | NewTransferDto          | Transfer       |
-| PUT            | /api/transfers/{id}/status | TransferStatusUpdateDto | Transfer       |
-| GET            | /api/users                 | N/A                     | List<User>     |
+| Request Method | Path                       | Request Body            | Returns         |
+|----------------|----------------------------|-------------------------|-----------------|
+| GET            | /api/account/balance       | N/A                     | BigDecimal      |
+| GET            | /api/account/transfers     | N/A                     | List\<Transfer> |
+| GET            | /api/transfers/{id}        | N/A                     | Transfer        |
+| POST           | /api/transfers             | NewTransferDto          | Transfer        |
+| PUT            | /api/transfers/{id}/status | TransferStatusUpdateDto | Transfer        |
+| GET            | /api/users                 | N/A                     | List\<User>     |
