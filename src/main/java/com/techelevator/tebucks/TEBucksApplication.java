@@ -19,7 +19,10 @@ public class TEBucksApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedOrigins("https://tebucks.netlify.app");
+                registry.addMapping("/*").allowedOrigins("https://tebucks.netlify.app");
                 registry.addMapping("/transfers/*").allowedOrigins("https://tebucks.netlify.app");
+                registry.addMapping("/api/**").allowedOrigins("https://tebucks.netlify.app");
+                registry.addMapping("/api/transfers/*").allowedOrigins("https://tebucks.netlify.app");
             }
         };
     }
