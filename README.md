@@ -66,83 +66,25 @@ If you complete all the required use cases and are looking for additional challe
 ## Sample screens
 
 ### Use case 4: Current balance
-```
-Your current account balance is: $9999.99
-```
+![Use case 4: Current balance](resources/tebucks_usecase_4.png "Current Balance")
 
 ### Use case 5: Send TE Bucks
-```
--------------------------------------------
-Users
-ID          Name
--------------------------------------------
-313         Bernice
-54          Larry
----------
-
-Enter ID of user you are sending to (0 to cancel):
-Enter amount:
-```
+![Use case 5: Send TE Bucks](resources/tebucks_usecase_5.png "Send TE Bucks")
 
 ### Use case 6: View transfers
-```
--------------------------------------------
-Transfers
-ID          From/To                 Amount
--------------------------------------------
-23          From: Bernice          $ 903.14
-79          To:    Larry           $  12.55
----------
-Please enter transfer ID to view details (0 to cancel): "
-```
+![Use case 6: View transfers](resources/tebucks_usecase_6.png "View transfers")
 
 ### Use case 7: Transfer details
-```
---------------------------------------------
-Transfer Details
---------------------------------------------
- Id: 23
- From: Bernice
- To: Me Myselfandi
- Type: Send
- Status: Approved
- Amount: $903.14
-```
+![Use case 7: Transfer details](resources/tebucks_usecase_7.png "Transfer details")
 
 ### Use case 9: Requesting TE Bucks
-```
--------------------------------------------
-Users
-ID          Name
--------------------------------------------
-313         Bernice
-54          Larry
----------
-
-Enter ID of user you are requesting from (0 to cancel):
-Enter amount:
-```
+![Use case 9: Requesting TE Bucks](resources/tebucks_usecase_9.png "Requesting TE Bucks")
 
 ### Use case 10: Pending requests
-```
--------------------------------------------
-Pending Transfers
-ID          To                     Amount
--------------------------------------------
-88          Bernice                $ 142.56
-147         Larry                  $  10.17
----------
-Please enter transfer ID to approve/reject (0 to cancel): "
-```
+![Use case 10: Pending requests](resources/tebucks_usecase_10.png "Pending requests")
 
 ### Use case 11: Approve or reject pending transfer
-```
-1: Approve
-2: Reject
-0: Don't approve or reject
----------
-Please choose an option:
-```
+![Use case 11: Approve or reject pending transfer](resources/tebucks_usecase_11.png "Approve or reject pending transfer")
 
 ## How to set up the database
 
