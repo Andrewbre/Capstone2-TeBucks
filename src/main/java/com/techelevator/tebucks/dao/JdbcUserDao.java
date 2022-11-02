@@ -41,11 +41,11 @@ public class JdbcUserDao implements UserDao {
     @Override
     public BigDecimal getBalanceByUserId(int userId) {
 
-        String sql = "SELECT balance FROM users WHERE user_id = ?;";
+        String sql = "SELECT balance::numeric FROM users WHERE user_id = ?;";
 
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
         if (result.next()) {
-            return new BigDecimal(result.getInt("balance"));
+            return result.getBigDecimal("balance");
         } else {
             return null;
         }
