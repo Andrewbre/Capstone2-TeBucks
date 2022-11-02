@@ -41,15 +41,15 @@ public class Transfer {
     }
 
 	public boolean isApproved() {
-		return false; // TODO
+        return false;
 	}
 	
 	public boolean isRejected() {
-		return false; // TODO
+        return false;
 	}
 	
 	public boolean isPending() {
-		return false; // TODO
+        return false;
 	}
 	
 	public boolean isRequestType() {
