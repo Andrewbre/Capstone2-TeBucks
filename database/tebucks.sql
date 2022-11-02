@@ -18,7 +18,9 @@ CREATE TABLE requests (
 	recipient_id int NOT NULL,
 	amount money NOT NULL,
 	is_solved boolean NOT NULL,
-	CONSTRAINT pk_requests PRIMARY KEY (user_id, transaction_id)
+	CONSTRAINT pk_requests PRIMARY KEY (user_id, transaction_id),
+    CONSTRAINT fk_requests_users FOREIGN KEY(user_id) REFERENCES users(user_id),
+    CONSTRAINT FK_requests_transactions FOREIGN KEY(actor_id) REFERENCES transactions(transaction_id)
 );
 
 COMMIT TRANSACTION;
