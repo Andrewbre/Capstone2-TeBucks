@@ -1,5 +1,6 @@
 package com.techelevator.tebucks.dao;
 
+import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 
 import java.math.BigDecimal;
@@ -12,6 +13,8 @@ public interface UserDao {
     User getUserById(int id);
 
     User findByUsername(String username);
+
+    List<Transfer> getAllTransfers(int id);
 
     int findIdByUsername(String username);
 
