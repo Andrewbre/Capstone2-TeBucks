@@ -89,13 +89,6 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public List<Transfer> getAllTransfers(int id) {
-
-        String sql = "SELECT transaction_id, user_id, recipient_id"
-
-    }
-
-    @Override
     public boolean create(String username, String password) {
 
         // create user

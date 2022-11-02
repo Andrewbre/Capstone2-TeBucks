@@ -14,8 +14,6 @@ public interface UserDao {
 
     User findByUsername(String username);
 
-    List<Transfer> getAllTransfers(int id);
-
     int findIdByUsername(String username);
 
     BigDecimal getBalanceByUserId(int userId);
