@@ -2,7 +2,13 @@
 
 Congratulations—you've landed a job with TEBucks, whose product is an online payment service for transferring "TE bucks" between friends. However, they don't have a product yet. You've been tasked with writing a RESTful API server and command-line application.
 
-The front-end of TEBucks has been completed for you and it is hosted at https://tebucks.netlify.app/
+The frontend of TEBucks has been completed for you, and it is hosted at https://tebucks.netlify.app/
+Your job is to complete the backend, including the Web API and database.
+
+The frontend team has provided the API design for you, which can be found further down in the README. 
+You must adhere to this design in order for the frontend to work with your backend. 
+You can and will need to add to the provided models, but do not take away fields that were provided as the 
+frontend relies on these field names and data types.
 
 ## Use cases
 
