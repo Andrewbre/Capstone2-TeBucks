@@ -1,5 +1,6 @@
 package com.techelevator.tebucks.dao;
 
+import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +36,24 @@ public class JdbcUserDao implements UserDao {
         return userId;
     }
 
+
+
+    @Override
+    public BigDecimal getBalanceByUserId(int userId) {
+
+        String sql = "SELECT balance FROM users WHERE user_id = ?;";
+
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
+        if (result.next()) {
+            return new BigDecimal(result.getInt("balance"));
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public User getUserById(int userId) {
-        String sql = "SELECT user_id, username, password_hash FROM users WHERE user_id = ?";
+        String sql = "SELECT user_id, username, password_hash FROM users WHERE user_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             return mapRowToUser(results);
@@ -82,6 +99,8 @@ public class JdbcUserDao implements UserDao {
 
         return newUserId != null;
     }
+
+
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
