@@ -42,7 +42,7 @@ public class Transfer {
 
 	public boolean isApproved() {
 
-        
+        return false;
 
 	}
 	
