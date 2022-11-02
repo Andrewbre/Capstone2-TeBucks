@@ -2,6 +2,8 @@
 
 Congratulations—you've landed a job with TEBucks, whose product is an online payment service for transferring "TE bucks" between friends. However, they don't have a product yet. You've been tasked with writing a RESTful API server and command-line application.
 
+The front-end of TEBucks has been completed for you and it is hosted at https://tebucks.netlify.app/
+
 ## Use cases
 
 ### Required use cases
