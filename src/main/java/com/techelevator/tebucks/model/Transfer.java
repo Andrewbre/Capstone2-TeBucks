@@ -15,6 +15,7 @@ public class Transfer {
     //edited transaction class as many fields in transfer covered our intended transaction fields
 
 
+    public Transfer() {}
     public Transfer(int transferId, String transferType, String transferStatus, User userFrom, User userTo, BigDecimal amount, LocalDate loggedtime) {
         this.transferId = transferId;
         this.transferType = transferType;
@@ -23,6 +24,10 @@ public class Transfer {
         this.userTo = userTo;
         this.amount = amount;
         this.loggedtime = loggedtime;
+    }
+
+    public void setTransferId(int transferId) {
+        this.transferId = transferId;
     }
 
     public void setTransferType(String transferType) {
