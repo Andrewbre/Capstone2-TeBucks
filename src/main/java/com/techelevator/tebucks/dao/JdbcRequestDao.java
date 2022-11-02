@@ -38,7 +38,7 @@ public class JdbcRequestDao implements RequestDao{
     public void setIsSolved(Request request) {
         String sql = "update Requests set is_solved = ? where transaction_id = ?";
         jdbcTemplate.update(sql,true,request.getTransactionId());
-       
+
     }
     private Request mapRowToRequest(SqlRowSet rowSet) {
         Request r = new Request();
