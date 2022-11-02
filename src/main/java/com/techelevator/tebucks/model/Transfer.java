@@ -41,24 +41,22 @@ public class Transfer {
     }
 
 	public boolean isApproved() {
-
-        return false;
-
+        return this.transferStatus.equals("Approved");
 	}
 	
 	public boolean isRejected() {
-		return false; // TODO
+		return this.transferStatus.equals("Rejected");
 	}
 	
 	public boolean isPending() {
-		return false; // TODO
+		return this.transferStatus.equals("Pending");
 	}
 	
 	public boolean isRequestType() {
-		return false; // TODO
+		return this.transferType.equals("Request");
 	}
 	
 	public boolean isSendType() {
-		return false; // TODO
+		return this.transferType.equals("Send");
 	}
 }

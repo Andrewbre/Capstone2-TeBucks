@@ -1,5 +1,6 @@
 package com.techelevator.tebucks.dao;
 
+import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,7 +41,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public BigDecimal getBalanceByUserId(int userId) {
 
-        String sql = "SELECT balance FROM tebucks WHERE user_id = ?";
+        String sql = "SELECT balance FROM users WHERE user_id = ?;";
 
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
         if (result.next()) {
@@ -52,7 +53,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public User getUserById(int userId) {
-        String sql = "SELECT user_id, username, password_hash FROM users WHERE user_id = ?";
+        String sql = "SELECT user_id, username, password_hash FROM users WHERE user_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             return mapRowToUser(results);
@@ -85,6 +86,13 @@ public class JdbcUserDao implements UserDao {
             return mapRowToUser(rowSet);
         }
         throw new UsernameNotFoundException("User " + username + " was not found.");
+    }
+
+    @Override
+    public List<Transfer> getAllTransfers(int id) {
+
+        String sql = "SELECT transaction_id, user_id, recipient_id"
+
     }
 
     @Override
