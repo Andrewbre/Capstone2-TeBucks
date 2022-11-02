@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,21 @@ public class JdbcUserDao implements UserDao {
         }
 
         return userId;
+    }
+
+
+
+    @Override
+    public BigDecimal getBalanceByUserId(int userId) {
+
+        String sql = "SELECT balance FROM tebucks WHERE user_id = ?";
+
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
+        if (result.next()) {
+            return new BigDecimal(result.getInt("balance"));
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -82,6 +98,8 @@ public class JdbcUserDao implements UserDao {
 
         return newUserId != null;
     }
+
+
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();

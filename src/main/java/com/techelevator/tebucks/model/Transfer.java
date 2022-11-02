@@ -41,7 +41,9 @@ public class Transfer {
     }
 
 	public boolean isApproved() {
-		return false; // TODO
+
+        return false;
+
 	}
 	
 	public boolean isRejected() {

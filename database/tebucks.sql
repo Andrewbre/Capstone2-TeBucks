@@ -1,5 +1,7 @@
 BEGIN TRANSACTION;
 
+DROP TABLE IF EXISTS requests;
+DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -11,13 +13,6 @@ CREATE TABLE users (
 	CONSTRAINT pk_users PRIMARY KEY (user_id),
 	CONSTRAINT uq_username UNIQUE (username)
 );
-
-
-COMMIT TRANSACTION;
-
-BEGIN TRANSACTION;
-
-DROP TABLE IF EXISTS transactions;
 
 CREATE TABLE transactions (
 	
@@ -31,9 +26,18 @@ CREATE TABLE transactions (
 	
 	CONSTRAINT pk_transaction PRIMARY KEY (transaction_id),
 	CONSTRAINT fk_transaction_users FOREIGN KEY (user_id) references users(user_id)
-)
+);
 
-Rollback; 
-commit;
+CREATE TABLE requests (
+	user_id int NOT NULL,
+	transaction_id int NOT NULL,
+	recipient_id int NOT NULL,
+	amount money NOT NULL,
+	is_solved boolean NOT NULL,
+	
+	CONSTRAINT pk_requests PRIMARY KEY (user_id, transaction_id),
+	CONSTRAINT fk_requests_users FOREIGN KEY (user_id) REFERENCES users(user_id),
+	CONSTRAINT fk_requests_transactions FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id)
+);
 
-select * from transactions join users using (user_id);
+COMMIT ;
