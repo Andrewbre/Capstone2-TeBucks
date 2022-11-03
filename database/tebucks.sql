@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 
 DROP TABLE IF EXISTS requests;
-DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS transfers;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -14,30 +14,33 @@ CREATE TABLE users (
 	CONSTRAINT uq_username UNIQUE (username)
 );
 
-CREATE TABLE transactions (
+CREATE TABLE transfers (
 	
-	transaction_id serial NOT NULL, 
+	transfer_id serial NOT NULL,
+	transfer_status varchar (30) not null,
 	user_id int NOT NULL ,
-	logged_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	amount money, 
+	logged_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	recipient_id int NOT NULL,
+	amount money NOT NULL, 
 	irs_eligible boolean, 
-	transaction_type varchar(10), 
+	transfer_type varchar(10), 
 	is_completed boolean, 
 	
-	CONSTRAINT pk_transaction PRIMARY KEY (transaction_id),
-	CONSTRAINT fk_transaction_users FOREIGN KEY (user_id) references users(user_id)
+	CONSTRAINT pk_transfer PRIMARY KEY (transfer_id),
+	CONSTRAINT fk_transfers_users FOREIGN KEY (user_id) references users(user_id)
 );
 
 CREATE TABLE requests (
 	user_id int NOT NULL,
-	transaction_id int NOT NULL,
+	transfer_id int NOT NULL,
 	recipient_id int NOT NULL,
 	amount money NOT NULL,
 	is_solved boolean NOT NULL,
 	
-	CONSTRAINT pk_requests PRIMARY KEY (user_id, transaction_id),
+	CONSTRAINT pk_requests PRIMARY KEY (user_id, transfer_id),
 	CONSTRAINT fk_requests_users FOREIGN KEY (user_id) REFERENCES users(user_id),
-	CONSTRAINT fk_requests_transactions FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id)
+	CONSTRAINT fk_requests_transfers FOREIGN KEY (transfer_id) REFERENCES transfers(transfer_id)
 );
 
-COMMIT ;
+COMMIT;
+
