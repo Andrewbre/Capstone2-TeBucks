@@ -1,33 +1,7 @@
 package com.techelevator.tebucks.controller;
 
 import com.techelevator.tebucks.dao.TransferDao;
-<<<<<<< HEAD
-import com.techelevator.tebucks.model.NewTransferDto;
-import com.techelevator.tebucks.model.Transfer;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
-@RestController
-public class TransferController {
-
-    private final TransferDao dao;
-
-    public TransferController(TransferDao dao) {
-        this.dao = dao;
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/transfers")
-    public Transfer createTransfer(@RequestBody NewTransferDto newTransfer) {
-        return dao.createNewTransfer(newTransfer);
-    }
-
-    @GetMapping("/api/transfers/{id}")
-    public Transfer getTransferById(@PathVariable("id") int transferId) {
-        return dao.getTransferById(transferId);
-    }
-
-=======
 import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.TransferStatusUpdateDto;
 import com.techelevator.tebucks.security.jwt.TokenProvider;
@@ -76,5 +50,4 @@ public class TransferController {
         return transferDao.updateTransfer(id, transferStatusUpdateDto);
 
     }
->>>>>>> d46fd05498cd22910033eed709ea41cef8e79977
 }
