@@ -16,17 +16,9 @@ CREATE TABLE users (
 
 CREATE TABLE transfers (
 	
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 	transfer_id serial NOT NULL,
 	transfer_status varchar (30) not null,
-=======
-	transfer_id serial NOT NULL, 
->>>>>>> cccf7f0a4c61387cf5ce0483f47e97f1506a864e
-=======
-	transfer_id serial NOT NULL,
-	transfer_status varchar (30) not null,
->>>>>>> b801f032d73983dff5f080fb01a826401aa692a7
 	user_id int NOT NULL ,
 	logged_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	recipient_id int NOT NULL,
