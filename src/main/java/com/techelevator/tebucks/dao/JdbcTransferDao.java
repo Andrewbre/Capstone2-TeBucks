@@ -62,17 +62,17 @@ public class JdbcTransferDao implements TransferDao {
         Transfer transfer = mapTransferDtoToTransfer(newTransfer);
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
-//        try {
+        try {
+            transfer.setTransferStatus("Pending");
             transfer.setTransferId(transferId);
-//        } catch (NullPointerException e) {
-//            e.getStackTrace();
-//        }
+        } catch (NullPointerException e) {
+            e.getStackTrace();
+            return null;
+        }
+        if (transfer.getTransferType().equals("Send")) {
+            completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo());
+        }
         return transfer;
-    }
-
-//    @Override
-    public Transfer updateTransfer(TransferStatusUpdateDto transferStatusUpdateDto) {
-        return null;
     }
 
     public boolean completeTransferSend (Transfer transfer, User userFrom, User userTo) {
