@@ -18,6 +18,7 @@ public class JdbcTransferDao implements TransferDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+
     @Override
     public List<Transfer> getAllTransfersByUserId(int userId) {
         return null;
@@ -46,6 +47,15 @@ public class JdbcTransferDao implements TransferDao {
             return newTransfer;
         } catch (NullPointerException e) {
             return null;
+        }
+    }
+    public void completeTransfer (Transfer transfer, BigDecimal userBal) {
+        if (transfer.getTransferType()=="Send") {
+            BigDecimal transferAmount = transfer.getAmount();
+            if ( transferAmount.compareTo(userBal) <= 0) {
+                String sql = "update transfer set balance = ? where ";
+            }
+
         }
     }
 
