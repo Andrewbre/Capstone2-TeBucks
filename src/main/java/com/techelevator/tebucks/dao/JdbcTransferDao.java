@@ -1,6 +1,7 @@
 package com.techelevator.tebucks.dao;
 
 import com.techelevator.tebucks.model.Transfer;
+import com.techelevator.tebucks.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public Transfer getTransferById(int transferId) {
-        String sql = "SELECT * FROM transferId WHERE transaction_id = ?";
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount, transfer_type, is_completed, logged_time FROM transfers WHERE transfer_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
         if (result.next()) {
             return mapRowToTransfer(result);
@@ -35,13 +36,17 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer createNewTransfer(Transfer newTransfer) {
 
-        String sql = "INSERT INTO transactions (user_id, logged_time, recipient_id, amount, " +
-                "transaction_type, is_completed VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO transfers (user_id, logged_time, recipient_id, amount, " +
+                "transfer_type, is_completed VALUES (?, ?, ?, ?, ?, ?);";
         Integer newId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
-                newTransfer.getLoggedtime(), newTransfer.getUserTo(), newTransfer.getAmount(),
+                newTransfer.getLoggedTime(), newTransfer.getUserTo(), newTransfer.getAmount(),
                 newTransfer.getTransferType(), newTransfer.getTransferStatus());
-        newTransfer.setTransferId(newId);
-        return newTransfer;
+        try {
+            newTransfer.setTransferId(newId);
+            return newTransfer;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override
@@ -51,6 +56,8 @@ public class JdbcTransferDao implements TransferDao {
 
     private Transfer mapRowToTransfer(SqlRowSet rowSet) {
         Transfer transfer = new Transfer();
+        transfer.setTransferId(rowSet.getInt("transfer_id"));
+        //transfer.setUserFrom(rowSet.getObject("user_id"), User.class);
         return transfer;
     }
 
