@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +57,16 @@ public class JdbcTransferDao implements TransferDao {
     public Transfer createNewTransfer(NewTransferDto newTransfer) {
 
         String sql = "INSERT INTO transfers (user_id, recipient_id, amount, " +
-                "transfer_type) VALUES (?, ?, ?, ?) RETURNING user_id, recipient_id, amount, transfer_type;";
-        return jdbcTemplate.queryForObject(sql, Transfer.class, newTransfer.getUserFrom(),
+                "transfer_type) VALUES (?, ?, ?, ?) RETURNING transfer_id;";
+        Transfer transfer = mapTransferDtoToTransfer(newTransfer);
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
+        try {
+            transfer.setTransferId(transferId);
+        } catch (NullPointerException e) {
+            e.getStackTrace();
+        }
+        return transfer;
     }
     public boolean completeTransferSend (Transfer transfer, User userFrom, User userTo) {
         if (transfer.getTransferType().equals("Send")) {
@@ -104,6 +112,15 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setUserTo(userDao.getUserById(rowSet.getInt("recipient_id")));
         transfer.setAmount(rowSet.getBigDecimal("amount"));
         transfer.setTransferType(rowSet.getString("transfer_type"));
+        return transfer;
+    }
+
+    private Transfer mapTransferDtoToTransfer(NewTransferDto dto) {
+        Transfer transfer = new Transfer();
+        transfer.setUserFrom(userDao.getUserById(dto.getUserFrom()));
+        transfer.setUserTo(userDao.getUserById(dto.getUserTo()));
+        transfer.setAmount(dto.getAmount());
+        transfer.setTransferType(dto.getTransferType());
         return transfer;
     }
 
