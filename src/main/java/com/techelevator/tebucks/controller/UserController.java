@@ -1,5 +1,6 @@
 package com.techelevator.tebucks.controller;
 
+import com.techelevator.tebucks.dao.JdbcTransferDao;
 import com.techelevator.tebucks.dao.JdbcUserDao;
 import com.techelevator.tebucks.dao.TransferDao;
 import com.techelevator.tebucks.dao.UserDao;
@@ -21,8 +22,9 @@ public class UserController {
     UserDao dao;
     TransferDao dao2;
 
-    public UserController(JdbcUserDao dao) {
+    public UserController(UserDao dao, TransferDao dao2) {
         this.dao = dao;
+        this.dao2=dao2;
     }
 
     @GetMapping("/api/account/balance")
