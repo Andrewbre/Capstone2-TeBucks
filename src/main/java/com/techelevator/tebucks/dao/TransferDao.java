@@ -14,7 +14,5 @@ public interface TransferDao {
 
     Transfer createNewTransfer(NewTransferDto newTransfer);
 
-    Transfer updateTransfer(TransferStatusUpdateDto transferStatusUpdateDto);
-
     Transfer updateTransfer(int id, TransferStatusUpdateDto transferStatusUpdateDto);
 }

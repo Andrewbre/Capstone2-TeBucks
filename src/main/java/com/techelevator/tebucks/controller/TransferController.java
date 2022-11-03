@@ -42,11 +42,11 @@ public class TransferController {
 
 
     @RequestMapping(path = "/api/transfer/{id}/status", method = RequestMethod.PUT)
-    public Transfer getTransferByIdStatus(@PathVariable int id, @Valid @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
+    public Transfer updateTransferByIdStatus(@PathVariable int id, @Valid @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
         TransferStatusUpdateDto input = new TransferStatusUpdateDto();
-        if (!input.getTransferStatus()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found");
-        }
+//        if (!input.getTransferStatus()) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found");
+//        }
         return transferDao.updateTransfer(id, transferStatusUpdateDto);
 
     }
