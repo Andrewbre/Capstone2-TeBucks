@@ -1,6 +1,7 @@
 package com.techelevator.tebucks.dao;
 
 import com.techelevator.tebucks.model.Transfer;
+import com.techelevator.tebucks.model.TransferStatusUpdateDto;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public interface TransferDao {
 
     Transfer createNewTransfer(Transfer newTransfer);
 
-    Transfer updateTransfer();
+    Transfer updateTransfer(TransferStatusUpdateDto transferStatusUpdateDto);
 
+    Transfer updateTransfer(int id, TransferStatusUpdateDto transferStatusUpdateDto);
 }

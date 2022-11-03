@@ -76,17 +76,6 @@ public class Transfer {
     }
 
 	public boolean isApproved() {
-<<<<<<< HEAD
-        return false;
-	}
-	
-	public boolean isRejected() {
-        return false;
-	}
-	
-	public boolean isPending() {
-        return false;
-=======
         return this.transferStatus.equals("Approved");
 	}
 	
@@ -96,7 +85,6 @@ public class Transfer {
 	
 	public boolean isPending() {
 		return this.transferStatus.equals("Pending");
->>>>>>> dc1dbd053ae57cdd35bb6c58833e6e2f25a4e26b
 	}
 	
 	public boolean isRequestType() {

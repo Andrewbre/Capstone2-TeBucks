@@ -58,44 +58,8 @@ public class AuthenticationController {
 
     }
 
-
-    @RequestMapping(path = "/api/transfer/{id}", method = RequestMethod.GET)
-    public Transfer getTransferById(@PathVariable int id) {
-        return getTransferById(id);
-    }
-
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/api/transfers", method = RequestMethod.POST)
-    public void transfer(@Valid @RequestBody Transfer newTransfer) {
-        if (!userDao.equals(newTransfer)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer does not ");
-        }
-        userDao.equals(newTransfer);
-    }
-
-    @RequestMapping(path = "/api/account/transfers", method = RequestMethod.GET)
-    public List<Transfer> getAccountTransfers() {
-        return null;
-    }
-
-    @RequestMapping(path = "/api/transfers/{id}/status", method = RequestMethod.PUT)
-    public void postTransferById() {
-
-    }
-
-    @RequestMapping(path = "/api/users", method = RequestMethod.GET)
-    public List<User> getListUsers() {
-        return null;
-
-    }
-
-    @RequestMapping(path = "/api/account/balance", method = RequestMethod.GET)
-    public Account getAccountBalance() {
-
-        return null;
-
-    }
 }
+
+
 
 
