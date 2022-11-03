@@ -5,6 +5,7 @@ import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import com.techelevator.tebucks.model.TransferStatusUpdateDto;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -101,7 +102,7 @@ public class JdbcTransferDao implements TransferDao {
 
     }
     @Override
-    public Transfer updateTransfer() {
+    public Transfer updateTransfer(int id, TransferStatusUpdateDto transferStatusUpdateDto) {
         return null;
     }
 
@@ -125,3 +126,4 @@ public class JdbcTransferDao implements TransferDao {
     }
 
 }
+

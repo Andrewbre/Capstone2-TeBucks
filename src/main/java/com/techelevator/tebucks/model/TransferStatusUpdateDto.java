@@ -3,7 +3,7 @@ package com.techelevator.tebucks.model;
 public class TransferStatusUpdateDto {
 	private String transferStatus;
 
-	public String getTransferStatus() {
+	public boolean getTransferStatus() {
 		return transferStatus;
 	}
 
