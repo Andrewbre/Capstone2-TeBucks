@@ -2,8 +2,11 @@ package com.techelevator.tebucks.controller;
 
 import com.techelevator.tebucks.dao.JdbcUserDao;
 import com.techelevator.tebucks.dao.UserDao;
+import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -29,4 +32,12 @@ public class UserController {
         return dao.findAll();
     }
 
-}
+
+
+    @RequestMapping(path = "/api/account/transfers", method = RequestMethod.GET)
+    public List<Transfer> getAccountTransfers() {
+        return null;
+
+    }
+
+    }
