@@ -78,10 +78,10 @@ public class JdbcTransferDao implements TransferDao {
     public boolean completeTransferSend (Transfer transfer, User userFrom, User userTo) {
         if (transfer.getTransferType().equals("Send")) {
             if ( transfer.getAmount().compareTo(userFrom.getBalance()) <= 0) {
-                String sql = "update user set balance = ? where user_id = ?";
-                String sql2 = "update user set balance = ? where user_id = ?";
-                SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
-                SqlRowSet rowSet2 = jdbcTemplate.queryForRowSet(sql,userTo.getBalance().add(transfer.getAmount()),userTo.getId());
+                String sql = "update users set balance = ? where user_id = ?";
+                String sql2 = "update users set balance = ? where user_id = ?";
+                jdbcTemplate.queryForRowSet(sql,userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
+                jdbcTemplate.queryForRowSet(sql,userTo.getBalance().add(transfer.getAmount()),userTo.getId());
                 return true;
             } else {
                 return false;
@@ -95,7 +95,7 @@ public class JdbcTransferDao implements TransferDao {
                 String sql1 = "update user set balance = ? where user_id = ?";
                 String sql2 = "update transfer set transfer_status = ? where transfer_id = ?";
                 SqlRowSet rowSet1 = jdbcTemplate.queryForRowSet(sql1,userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
-                SqlRowSet rowset2 = jdbcTemplate.queryForRowSet(sql1,userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
+                SqlRowSet rowSet2 = jdbcTemplate.queryForRowSet(sql1,userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
                 SqlRowSet rowSet3 = jdbcTemplate.queryForRowSet(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
                 return true;
             }
