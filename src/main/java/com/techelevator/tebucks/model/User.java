@@ -28,6 +28,23 @@ public class User {
       this.activated = true;
    }
 
+   public User(int id, String username, String password, boolean activated, Set<Authority> authorities, BigDecimal balance) {
+      this.id = id;
+      this.username = username;
+      this.password = password;
+      this.activated = activated;
+      if (authorities != null) this.setAuthorities(authorities);
+      this.balance = balance;
+   }
+
+   public BigDecimal getBalance() {
+      return balance;
+   }
+
+   public void setBalance(BigDecimal balance) {
+      this.balance = balance;
+   }
+
    public int getId() {
       return id;
    }
