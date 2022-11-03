@@ -14,8 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.techelevator.tebucks.model.Transfer.TRANSFER_STATUS_APPROVED;
-import static com.techelevator.tebucks.model.Transfer.TRANSFER_STATUS_REJECTED;
+import static com.techelevator.tebucks.model.Transfer.*;
 
 @Component
 public class JdbcTransferDao implements TransferDao {
@@ -64,6 +63,7 @@ public class JdbcTransferDao implements TransferDao {
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
 //        try {
             transfer.setTransferId(transferId);
+            transfer.setTransferStatus(TRANSFER_STATUS_PENDING);
 //        } catch (NullPointerException e) {
 //            e.getStackTrace();
 //        }
