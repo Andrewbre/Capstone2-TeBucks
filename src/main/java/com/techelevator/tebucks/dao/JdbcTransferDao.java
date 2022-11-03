@@ -33,7 +33,7 @@ public class JdbcTransferDao implements TransferDao {
     public List<Transfer> getAllTransfersByUserId(int userId) {
         List<Transfer> allTransfers = new ArrayList<>();
 
-        String sql = "SELECT transfer_id, user_id, recipient_id, amount, transfer_type FROM transfers WHERE user_id = ?;";
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type FROM transfers WHERE user_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         while(results.next()) {
             allTransfers.add(mapRowToTransfer(results));
@@ -46,7 +46,7 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public Transfer getTransferById(int transferId) {
-        String sql = "SELECT transfer_id, user_id, recipient_id, amount, transfer_type FROM transfers WHERE transfer_id = ?;";
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type FROM transfers WHERE transfer_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
         if (result.next()) {
             return mapRowToTransfer(result);
@@ -62,15 +62,15 @@ public class JdbcTransferDao implements TransferDao {
         Transfer transfer = mapTransferDtoToTransfer(newTransfer);
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
-        try {
+//        try {
             transfer.setTransferId(transferId);
-        } catch (NullPointerException e) {
-            e.getStackTrace();
-        }
+//        } catch (NullPointerException e) {
+//            e.getStackTrace();
+//        }
         return transfer;
     }
 
-   // @Override
+//    @Override
     public Transfer updateTransfer(TransferStatusUpdateDto transferStatusUpdateDto) {
         return null;
     }
