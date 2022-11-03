@@ -14,7 +14,7 @@ CREATE TABLE users (
 	CONSTRAINT uq_username UNIQUE (username)
 );
 
-CREATE TABLE transactions (
+CREATE TABLE transfer (
 	
 	transaction_id serial NOT NULL, 
 	user_id int NOT NULL ,
