@@ -27,16 +27,7 @@ public class User {
       if(authorities != null) this.setAuthorities(authorities);
       this.activated = true;
    }
-
-
-
-   public BigDecimal getBalance() {
-      return balance;
-   }
-
-   public void setBalance(BigDecimal balance) {
-
-   public User(int id, String username, String password, boolean activated, Set<Authority> authorities, BigDecimal balance) {
+      public User(int id, String username, String password, boolean activated, Set<Authority> authorities, BigDecimal balance) {
       this.id = id;
       this.username = username;
       this.password = password;

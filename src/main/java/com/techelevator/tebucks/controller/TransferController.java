@@ -5,6 +5,7 @@ import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class TransferController {
@@ -24,6 +25,12 @@ public class TransferController {
     @GetMapping("/api/transfers/{id}")
     public Transfer getTransferById(@PathVariable("id") int transferId) {
         return dao.getTransferById(transferId);
+    }
+
+    @RequestMapping(path = "/api/transfers/{id}/status",method = RequestMethod.PUT)
+    public Transfer updateTransfer(@RequestBody Transfer transfer, @PathVariable int id) {
+
+        return transfer;
     }
 
 }
