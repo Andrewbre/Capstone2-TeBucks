@@ -37,6 +37,14 @@ public class User {
       this.balance = balance;
    }
 
+   public BigDecimal getBalance() {
+      return balance;
+   }
+
+   public void setBalance(BigDecimal balance) {
+      this.balance = balance;
+   }
+
    public int getId() {
       return id;
    }
