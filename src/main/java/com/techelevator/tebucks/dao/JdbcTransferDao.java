@@ -93,7 +93,7 @@ public class JdbcTransferDao implements TransferDao {
 
     }
     @Override
-    public Transfer updateTransfer() {
+    public Transfer updateTransfer(int id, TransferStatusUpdateDto transferStatusUpdateDto) {
         return null;
     }
 
@@ -108,3 +108,4 @@ public class JdbcTransferDao implements TransferDao {
     }
 
 }
+
