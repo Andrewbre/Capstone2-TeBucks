@@ -10,20 +10,20 @@ public class Transfer {
     private User userFrom;
     private User userTo;
     private BigDecimal amount;
-    private LocalDate loggedtime;
+    private LocalDate loggedTime;
 
     //edited transaction class as many fields in transfer covered our intended transaction fields
 
 
     public Transfer() {}
-    public Transfer(int transferId, String transferType, String transferStatus, User userFrom, User userTo, BigDecimal amount, LocalDate loggedtime) {
+    public Transfer(int transferId, String transferType, String transferStatus, User userFrom, User userTo, BigDecimal amount, LocalDate loggedTime) {
         this.transferId = transferId;
         this.transferType = transferType;
         this.transferStatus = transferStatus;
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.amount = amount;
-        this.loggedtime = loggedtime;
+        this.loggedTime = loggedTime;
     }
 
     public void setTransferId(int transferId) {
@@ -42,12 +42,20 @@ public class Transfer {
         this.amount = amount;
     }
 
-    public LocalDate getLoggedtime() {
-        return loggedtime;
+    public void setUserFrom(User userFrom) {
+        this.userFrom = userFrom;
     }
 
-    public void setLoggedtime(LocalDate loggedtime) {
-        this.loggedtime = loggedtime;
+    public void setUserTo(User userTo) {
+        this.userTo = userTo;
+    }
+
+    public LocalDate getLoggedTime() {
+        return loggedTime;
+    }
+
+    public void setLoggedTime(LocalDate loggedTime) {
+        this.loggedTime = loggedTime;
     }
 
     public static final String TRANSFER_TYPE_REQUEST = "Request";
