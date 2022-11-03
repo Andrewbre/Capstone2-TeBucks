@@ -1,12 +1,17 @@
 package com.techelevator.tebucks.dao;
 
 import com.techelevator.tebucks.model.Transfer;
+import com.techelevator.tebucks.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.util.List;
+
+import static com.techelevator.tebucks.model.Transfer.TRANSFER_STATUS_APPROVED;
+import static com.techelevator.tebucks.model.Transfer.TRANSFER_STATUS_REJECTED;
 
 @Component
 public class JdbcTransferDao implements TransferDao {
@@ -44,16 +49,38 @@ public class JdbcTransferDao implements TransferDao {
         newTransfer.setTransferId(newId);
         return newTransfer;
     }
-    public void completeTransfer (Transfer transfer, BigDecimal userBal) {
-        if (transfer.getTransferType()=="Send") {
-            BigDecimal transferAmount = transfer.getAmount();
-            if ( transferAmount.compareTo(userBal) <= 0) {
-                String sql = "update transfer set balance = ? where ";
+    public boolean completeTransferSend (Transfer transfer, User userFrom, User userTo) {
+        if (transfer.getTransferType().equals("Send")) {
+            if ( transfer.getAmount().compareTo(userFrom.getBalance()) <= 0) {
+                String sql = "update user set balance = ? where user_id = ?";
+                String sql2 = "update user set balance = ? where user_id = ?";
+                SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
+                SqlRowSet rowSet2 = jdbcTemplate.queryForRowSet(sql,userTo.getBalance().add(transfer.getAmount()),userTo.getId());
+                return true;
+            } else {
+                return false;
             }
-
         }
+        return false;
     }
+    public boolean approveTransferRequest (Transfer transfer, User userFrom, User userTo) {
+        if (transfer.getTransferType().equals("Request")) {
+            if (transfer.getAmount().compareTo(userTo.getBalance()) <= 0) {
+                String sql1 = "update user set balance = ? where user_id = ?";
+                String sql2 = "update transfer set transfer_status = ? where transfer_id = ?";
+                SqlRowSet rowSet1 = jdbcTemplate.queryForRowSet(sql1,userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
+                SqlRowSet rowset2 = jdbcTemplate.queryForRowSet(sql1,userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
+                SqlRowSet rowSet3 = jdbcTemplate.queryForRowSet(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
+                return true;
+            }
+        }
+        return false;
+    }
+    public void rejectTransferRequest (Transfer transfer) {
+        String sql = "update transfer set transfer_status = ? where transfer_id = ?";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,TRANSFER_STATUS_REJECTED,transfer.getTransferId());
 
+    }
     @Override
     public Transfer updateTransfer() {
         return null;
