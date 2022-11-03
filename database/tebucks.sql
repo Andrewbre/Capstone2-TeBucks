@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 
 DROP TABLE IF EXISTS requests;
-DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS transfers;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -18,9 +18,9 @@ CREATE TABLE transfers (
 	
 	transfer_id serial NOT NULL, 
 	user_id int NOT NULL ,
-	logged_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	logged_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	recipient_id int NOT NULL,
-	amount money, 
+	amount money NOT NULL, 
 	irs_eligible boolean, 
 	transfer_type varchar(10), 
 	is_completed boolean, 
