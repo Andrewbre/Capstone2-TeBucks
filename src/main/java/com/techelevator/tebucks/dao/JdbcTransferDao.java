@@ -69,6 +69,12 @@ public class JdbcTransferDao implements TransferDao {
         }
         return transfer;
     }
+
+    @Override
+    public Transfer updateTransfer(TransferStatusUpdateDto transferStatusUpdateDto) {
+        return null;
+    }
+
     public boolean completeTransferSend (Transfer transfer, User userFrom, User userTo) {
         if (transfer.getTransferType().equals("Send")) {
             if ( transfer.getAmount().compareTo(userFrom.getBalance()) <= 0) {

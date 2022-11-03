@@ -2,6 +2,7 @@ package com.techelevator.tebucks.controller;
 
 import com.techelevator.tebucks.dao.TransferDao;
 
+import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.TransferStatusUpdateDto;
 import com.techelevator.tebucks.security.jwt.TokenProvider;
@@ -26,7 +27,7 @@ public class TransferController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/api/transfers", method = RequestMethod.POST)
-    public void transfer(@Valid @RequestBody Transfer newTransfer) {
+    public void transfer(@Valid @RequestBody NewTransferDto newTransfer) {
         if (!transferDao.equals(newTransfer)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer does not exist");
         }
