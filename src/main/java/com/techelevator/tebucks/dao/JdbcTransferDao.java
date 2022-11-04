@@ -62,6 +62,10 @@ public class JdbcTransferDao implements TransferDao {
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
         try {
             transfer.setTransferStatus("Pending");
+            if (transfer.getTransferType().equals("Request")) {
+                String sql2 = "Update transfers set transfer_status = ? where transfer_id = ?";
+                jdbcTemplate.update(sql2,TRANSFER_STATUS_PENDING,transfer.getTransferId());
+            }
             transfer.setTransferId(transferId);
         } catch (NullPointerException e) {
             e.getStackTrace();
