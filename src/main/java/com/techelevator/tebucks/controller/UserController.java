@@ -21,9 +21,9 @@ public class UserController {
     UserDao dao;
     TransferDao dao2;
 
-    public UserController(UserDao dao, TransferDao dao2) {
+    public UserController(JdbcUserDao dao, TransferDao dao2) {
         this.dao = dao;
-        this.dao2=dao2;
+        this.dao2 = dao2;
     }
 
     @GetMapping("/api/account/balance")

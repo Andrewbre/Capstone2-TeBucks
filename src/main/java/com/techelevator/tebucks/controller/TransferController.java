@@ -37,6 +37,5 @@ public class TransferController {
 
 
         return transferDao.updateTransfer(id, transferStatusUpdateDto);
-
     }
 }
