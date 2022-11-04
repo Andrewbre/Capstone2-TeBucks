@@ -89,22 +89,22 @@ public class Transfer {
     }
 
 	public boolean isApproved() {
-        return this.transferStatus.equals("Approved");
+        return this.transferStatus.equals(TRANSFER_STATUS_APPROVED);
 	}
 	
 	public boolean isRejected() {
-		return this.transferStatus.equals("Rejected");
+		return this.transferStatus.equals(TRANSFER_STATUS_REJECTED);
 	}
 	
 	public boolean isPending() {
-		return this.transferStatus.equals("Pending");
+		return this.transferStatus.equals(TRANSFER_STATUS_PENDING);
 	}
 	
 	public boolean isRequestType() {
-		return this.transferType.equals("Request");
+		return this.transferType.equals(TRANSFER_TYPE_REQUEST);
 	}
 	
 	public boolean isSendType() {
-		return this.transferType.equals("Send");
+		return this.transferType.equals(TRANSFER_TYPE_SEND);
 	}
 }

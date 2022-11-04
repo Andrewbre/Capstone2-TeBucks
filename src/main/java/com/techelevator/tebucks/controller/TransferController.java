@@ -25,16 +25,15 @@ public class TransferController {
     }
 
 
-    @RequestMapping(path = "/api/transfer/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/transfers/{id}", method = RequestMethod.GET)
     public Transfer getTransferById(@PathVariable int id) {
         return transferDao.getTransferById(id);
 
     }
 
 
-    @RequestMapping(path = "/api/transfer/{id}/status", method = RequestMethod.PUT)
+    @RequestMapping(path = "/api/transfers/{id}/status", method = RequestMethod.PUT)
     public Transfer updateTransferByIdStatus(@PathVariable int id, @Valid @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
-        TransferStatusUpdateDto input = new TransferStatusUpdateDto();
 //        if (!input.getTransferStatus()) {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found");
 //        }
