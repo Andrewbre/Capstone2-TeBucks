@@ -10,19 +10,21 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
+import java.util.List;
 
 public class LoginService {
     private static final String API_BASE_URL = "https://te-pgh-api.azurewebsites.net/";
     private final RestTemplate restTemplate = new RestTemplate();
 
 
+
     public String login() {
         IRSLoginDto login = new IRSLoginDto();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<IRSLoginDto>entity =new HttpEntity<>(login,headers);
+        HttpEntity<IRSLoginDto>entity = new HttpEntity<>(login,headers);
         String token = null;
-            ResponseEntity<TokenDTo> response = restTemplate.exchange(API_BASE_URL + "login", HttpMethod.POST, entity,TokenDTo.class);
+            ResponseEntity<TokenDTo> response = restTemplate.exchange(API_BASE_URL + "api/Login", HttpMethod.POST, entity,TokenDTo.class);
             TokenDTo body = response.getBody();
             if (body != null) {
                 token = body.getToken();
@@ -30,16 +32,19 @@ public class LoginService {
         return token;
     }
 
-    public IrsLog addTransfer (Transfer transfer) {
+    public IrsLog addTransfer (Transfer transfer, String description) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(login());
-        IrsLog log = new IrsLog(null,transfer.getUserFrom().getUsername(),transfer.getUserTo().getUsername(),transfer.getAmount().doubleValue());
+        IrsLog log = new IrsLog(description,transfer.getUserFrom().getUsername(),transfer.getUserTo().getUsername(),transfer.getAmount().doubleValue());
         HttpEntity<IrsLog> entity = new HttpEntity<>(log,headers);
         try {
             ResponseEntity<IrsLog> response = restTemplate.exchange(API_BASE_URL +"/api/TxLog", HttpMethod.POST,entity,IrsLog.class);
             return response.getBody();
-        }catch (RestClientResponseException | ResourceAccessException e) {}
+        }catch (RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
+
 }

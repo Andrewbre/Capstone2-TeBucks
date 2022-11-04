@@ -36,8 +36,8 @@ public class JdbcTransferDao implements TransferDao {
     public List<Transfer> getAllTransfersByUserId(int userId) {
         List<Transfer> allTransfers = new ArrayList<>();
 
-        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type, transfer_status FROM transfers WHERE user_id = ?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type, transfer_status FROM transfers WHERE user_id = ? OR recipient_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId, userId);
         while(results.next()) {
             allTransfers.add(mapRowToTransfer(results));
         }
@@ -63,14 +63,21 @@ public class JdbcTransferDao implements TransferDao {
         if (newTransfer.getUserFrom() == newTransfer.getUserTo() || newTransfer.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        String transfer_status = "";
         String sql = "INSERT INTO transfers (user_id, recipient_id, amount, " +
-                "transfer_type) VALUES (?, ?, ?, ?) RETURNING transfer_id;";
+                "transfer_type, transfer_status) VALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
+        if (newTransfer.getTransferType().equals(TRANSFER_TYPE_SEND)) {
+            transfer_status = TRANSFER_STATUS_APPROVED;
+        } else {
+            transfer_status = TRANSFER_STATUS_PENDING;
+        }
         Transfer transfer = mapTransferDtoToTransfer(newTransfer);
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
-                newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
-        if (transfer.getAmount().compareTo( BigDecimal.valueOf(1000)) >= 0) {
+                newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType(), transfer_status);
+        transfer.setTransferId(transferId);
+        if (transfer.getAmount().compareTo(BigDecimal.valueOf(1000)) >= 0) {
             LoginService login = new LoginService();
-            login.addTransfer(transfer).setDescription("Transaction over 1000");
+            login.addTransfer(transfer, "Transaction over 1000");
         }
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_SEND)) {
             if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
@@ -81,7 +88,6 @@ public class JdbcTransferDao implements TransferDao {
             }
         }
         try {
-            transfer.setTransferStatus("Pending");
             if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_REQUEST)) {
                 String sql2 = "Update transfers set transfer_status = ? where transfer_id = ?";
                 jdbcTemplate.update(sql2,TRANSFER_STATUS_PENDING,transfer.getTransferId());
@@ -101,17 +107,22 @@ public class JdbcTransferDao implements TransferDao {
             userTo.setBalance(userDao.getBalanceByUserId(userTo.getId()));
             if ( transfer.getAmount().compareTo(userFrom.getBalance()) <= 0) {
                 String sql = "update users set balance = ? where user_id = ? RETURNING balance::numeric";
-                String sql2 = "update users set balance = ? where user_id = ? RETURNING balance::numeric";
+                String sql2 = "update transfers set transfer_status = ? where transfer_id = ?;";
                 BigDecimal userFromBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
                 BigDecimal userToBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userTo.getBalance().add(transfer.getAmount()),userTo.getId());
-                transfer.setTransferStatus("Approved");
+                transfer.setTransferStatus(TRANSFER_STATUS_APPROVED);
+                jdbcTemplate.update(sql2, transfer.getTransferStatus(), transfer.getTransferId());
+
                 userFrom.setBalance(userFrom.getBalance().subtract(transfer.getAmount()));
                 userTo.setBalance(userTo.getBalance().add(transfer.getAmount()));
 
                 return true;
             } else {
                 LoginService login = new LoginService();
-                login.addTransfer(transfer);
+                login.addTransfer(transfer, "Overdraft");
+                String sql = "UPDATE transfers SET transfer_status = ? WHERE transfer_id = ?";
+                transfer.setTransferStatus(TRANSFER_STATUS_REJECTED);
+                jdbcTemplate.update(sql, TRANSFER_STATUS_REJECTED, transfer.getTransferId());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
@@ -132,7 +143,9 @@ public class JdbcTransferDao implements TransferDao {
                 return true;
             } else {
                 LoginService login = new LoginService();
-                login.addTransfer(transfer);
+                login.addTransfer(transfer, "Overdraft");
+                String sql = "UPDATE transfers SET transfer_status = ? WHERE transfer_id = ?";
+                jdbcTemplate.update(sql, TRANSFER_STATUS_REJECTED, transfer.getTransferId());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
