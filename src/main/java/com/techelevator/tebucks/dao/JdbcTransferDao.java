@@ -108,6 +108,8 @@ public class JdbcTransferDao implements TransferDao {
 
                 return true;
             } else {
+                LoginService login = new LoginService();
+                login.addTransfer(transfer);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
@@ -127,6 +129,8 @@ public class JdbcTransferDao implements TransferDao {
                 
                 return true;
             } else {
+                LoginService login = new LoginService();
+                login.addTransfer(transfer);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
