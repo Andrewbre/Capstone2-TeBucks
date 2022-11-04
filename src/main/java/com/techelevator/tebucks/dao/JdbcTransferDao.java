@@ -74,10 +74,10 @@ public class JdbcTransferDao implements TransferDao {
         Transfer transfer = mapTransferDtoToTransfer(newTransfer);
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType(), transfer_status);
+        transfer.setTransferId(transferId);
         if (transfer.getAmount().compareTo(BigDecimal.valueOf(1000)) >= 0) {
             LoginService login = new LoginService();
             login.addTransfer(transfer, "Transaction over 1000");
-            login.getTransfers();
         }
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_SEND)) {
             if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
@@ -88,7 +88,6 @@ public class JdbcTransferDao implements TransferDao {
             }
         }
         try {
-            transfer.setTransferStatus("Pending");
             if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_REQUEST)) {
                 String sql2 = "Update transfers set transfer_status = ? where transfer_id = ?";
                 jdbcTemplate.update(sql2,TRANSFER_STATUS_PENDING,transfer.getTransferId());
@@ -121,7 +120,9 @@ public class JdbcTransferDao implements TransferDao {
             } else {
                 LoginService login = new LoginService();
                 login.addTransfer(transfer, "Overdraft");
-                login.getTransfers();
+                String sql = "UPDATE transfers SET transfer_status = ? WHERE transfer_id = ?";
+                transfer.setTransferStatus(TRANSFER_STATUS_REJECTED);
+                jdbcTemplate.update(sql, TRANSFER_STATUS_REJECTED, transfer.getTransferId());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
@@ -143,6 +144,8 @@ public class JdbcTransferDao implements TransferDao {
             } else {
                 LoginService login = new LoginService();
                 login.addTransfer(transfer, "Overdraft");
+                String sql = "UPDATE transfers SET transfer_status = ? WHERE transfer_id = ?";
+                jdbcTemplate.update(sql, TRANSFER_STATUS_REJECTED, transfer.getTransferId());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }

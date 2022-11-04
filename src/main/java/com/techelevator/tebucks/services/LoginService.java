@@ -47,21 +47,4 @@ public class LoginService {
         return null;
     }
 
-    public IrsLog[] getTransfers() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(login());
-        HttpEntity<IrsLog> entity = new HttpEntity<>(headers);
-        try {
-            ResponseEntity<IrsLog[]> response = restTemplate.getForEntity(API_BASE_URL + "/api/TxLog", IrsLog[].class);
-            for (int i = 0; i < response.getBody().length; i++) {
-                System.out.println(response.getBody()[i].getDescription());
-                System.out.println(response.getBody()[i].getAccount_from());
-                System.out.println(response.getBody()[i].getAccount_to());
-                System.out.println(response.getBody()[i].getAmount());
-            }
-            return response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            return null;
-        }
-    }
 }
