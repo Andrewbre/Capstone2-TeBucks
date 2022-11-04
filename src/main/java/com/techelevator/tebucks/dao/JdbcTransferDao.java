@@ -4,6 +4,7 @@ import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 import org.springframework.http.HttpStatus;
+import com.techelevator.tebucks.services.LoginService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.tebucks.model.TransferStatusUpdateDto;
@@ -65,7 +66,10 @@ public class JdbcTransferDao implements TransferDao {
         Transfer transfer = mapTransferDtoToTransfer(newTransfer);
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
-
+        if (transfer.getAmount().compareTo( BigDecimal.valueOf(1000)) >= 0) {
+            LoginService login = new LoginService();
+            login.addTransfer(transfer);
+        }
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_SEND)) {
             if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
                 transfer.setTransferId(transferId);
@@ -101,6 +105,7 @@ public class JdbcTransferDao implements TransferDao {
                 transfer.setTransferStatus("Approved");
                 userFrom.setBalance(userFrom.getBalance().subtract(transfer.getAmount()));
                 userTo.setBalance(userTo.getBalance().add(transfer.getAmount()));
+
                 return true;
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -119,6 +124,7 @@ public class JdbcTransferDao implements TransferDao {
                 BigDecimal subtractedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userTo.getBalance().add(transfer.getAmount()),userTo.getId());
                 jdbcTemplate.update(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
                 transfer.setTransferStatus(TRANSFER_STATUS_APPROVED);
+                
                 return true;
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
