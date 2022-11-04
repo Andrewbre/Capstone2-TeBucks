@@ -8,6 +8,8 @@ public class IrsLog {
     private String account_to;
     private double amount;
 
+    public IrsLog() {}
+
     public IrsLog (String description,String account_from,String account_to,double amount) {
         this.description = description;
         this.account_from=account_from;

@@ -76,7 +76,8 @@ public class JdbcTransferDao implements TransferDao {
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType(), transfer_status);
         if (transfer.getAmount().compareTo(BigDecimal.valueOf(1000)) >= 0) {
             LoginService login = new LoginService();
-            login.addTransfer(transfer).setDescription("Transaction over 1000");
+            login.addTransfer(transfer, "Transaction over 1000");
+            login.getTransfers();
         }
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_SEND)) {
             if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
@@ -119,7 +120,7 @@ public class JdbcTransferDao implements TransferDao {
                 return true;
             } else {
                 LoginService login = new LoginService();
-                login.addTransfer(transfer);
+                login.addTransfer(transfer, "Overdraft");
                 login.getTransfers();
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
@@ -141,7 +142,7 @@ public class JdbcTransferDao implements TransferDao {
                 return true;
             } else {
                 LoginService login = new LoginService();
-                login.addTransfer(transfer);
+                login.addTransfer(transfer, "Overdraft");
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }

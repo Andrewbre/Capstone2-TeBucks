@@ -32,16 +32,18 @@ public class LoginService {
         return token;
     }
 
-    public IrsLog addTransfer (Transfer transfer) {
+    public IrsLog addTransfer (Transfer transfer, String description) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(login());
-        IrsLog log = new IrsLog(null,transfer.getUserFrom().getUsername(),transfer.getUserTo().getUsername(),transfer.getAmount().doubleValue());
+        IrsLog log = new IrsLog(description,transfer.getUserFrom().getUsername(),transfer.getUserTo().getUsername(),transfer.getAmount().doubleValue());
         HttpEntity<IrsLog> entity = new HttpEntity<>(log,headers);
         try {
             ResponseEntity<IrsLog> response = restTemplate.exchange(API_BASE_URL +"/api/TxLog", HttpMethod.POST,entity,IrsLog.class);
             return response.getBody();
-        }catch (RestClientResponseException | ResourceAccessException e) {}
+        }catch (RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 
