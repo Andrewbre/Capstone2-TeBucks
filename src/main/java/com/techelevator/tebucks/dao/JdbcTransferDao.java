@@ -79,8 +79,10 @@ public class JdbcTransferDao implements TransferDao {
             if ( transfer.getAmount().compareTo(userFrom.getBalance()) <= 0) {
                 String sql = "update users set balance = ? where user_id = ?";
                 String sql2 = "update users set balance = ? where user_id = ?";
-                jdbcTemplate.queryForRowSet(sql,userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
-                jdbcTemplate.queryForRowSet(sql,userTo.getBalance().add(transfer.getAmount()),userTo.getId());
+                SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
+                SqlRowSet rowSet2 = jdbcTemplate.queryForRowSet(sql,userTo.getBalance().add(transfer.getAmount()),userTo.getId());
+                userFrom.setBalance((userFrom.getBalance().subtract(transfer.getAmount())));
+                userTo.setBalance(userTo.getBalance().add(transfer.getAmount()));
                 return true;
             } else {
                 return false;
