@@ -22,7 +22,7 @@ public class Transfer {
         this.transferStatus = transferStatus;
         this.userFrom = userFrom;
         this.userTo = userTo;
-        this.amount = amount;
+        this.amount = BigDecimal.valueOf(1000.00);
         this.loggedTime = loggedTime;
     }
 

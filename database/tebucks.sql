@@ -18,7 +18,7 @@ CREATE TABLE transfers (
 	
 
 	transfer_id serial NOT NULL,
-	transfer_status varchar (30) not null,
+	transfer_status varchar (30),
 	user_id int NOT NULL ,
 	logged_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	recipient_id int NOT NULL,

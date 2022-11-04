@@ -13,8 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.techelevator.tebucks.model.Transfer.TRANSFER_STATUS_APPROVED;
-import static com.techelevator.tebucks.model.Transfer.TRANSFER_STATUS_REJECTED;
+import static com.techelevator.tebucks.model.Transfer.*;
 
 @Component
 public class JdbcTransferDao implements TransferDao {
@@ -101,12 +100,15 @@ public class JdbcTransferDao implements TransferDao {
     }
     public boolean approveTransferRequest (Transfer transfer, User userFrom, User userTo) {
         if (transfer.getTransferType().equals("Request")) {
+            userFrom.setBalance(userDao.getBalanceByUserId(userFrom.getId()));
+            userTo.setBalance(userDao.getBalanceByUserId(userTo.getId()));
             if (transfer.getAmount().compareTo(userTo.getBalance()) <= 0) {
                 String sql1 = "update user set balance = ? where user_id = ? RETURNING balance";
                 String sql2 = "update transfer set transfer_status = ? where transfer_id = ?";
                 BigDecimal addedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
                 BigDecimal subtractedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
                 SqlRowSet rowSet3 = jdbcTemplate.queryForRowSet(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
+                transfer.setTransferStatus(TRANSFER_STATUS_APPROVED);
                 return true;
             }
         }
