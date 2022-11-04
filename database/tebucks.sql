@@ -9,16 +9,15 @@ CREATE TABLE users (
 	username varchar(50) UNIQUE NOT NULL,
 	password_hash varchar(200) NOT NULL,
 	role varchar(20),
-	balance money Not null default 1000.00,
+	balance money NOT NULL DEFAULT 1000.00,
 	CONSTRAINT pk_users PRIMARY KEY (user_id),
 	CONSTRAINT uq_username UNIQUE (username)
 );
 
 CREATE TABLE transfers (
 	
-
 	transfer_id serial NOT NULL,
-	transfer_status varchar (30),
+	transfer_status varchar (30) NOT NULL,
 	user_id int NOT NULL ,
 	logged_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	recipient_id int NOT NULL,

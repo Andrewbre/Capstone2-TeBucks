@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin
 public class TransferController {
     private final TransferDao transferDao;
 
@@ -31,11 +32,8 @@ public class TransferController {
 
     }
 
-
     @RequestMapping(path = "/api/transfers/{id}/status", method = RequestMethod.PUT)
-    public Transfer updateTransferByIdStatus(@PathVariable int id, @Valid @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
-
-
+    public Transfer updateTransferByIdStatus(@PathVariable int id, @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
         return transferDao.updateTransfer(id, transferStatusUpdateDto);
     }
 }
