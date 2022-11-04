@@ -2,10 +2,10 @@ package com.techelevator.tebucks.controller;
 
 import com.techelevator.tebucks.dao.TransferDao;
 
-import com.techelevator.tebucks.model.NewTransferDto;
-import com.techelevator.tebucks.model.Transfer;
-import com.techelevator.tebucks.model.TransferStatusUpdateDto;
+import com.techelevator.tebucks.model.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,4 +36,6 @@ public class TransferController {
     public Transfer updateTransferByIdStatus(@PathVariable int id, @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
         return transferDao.updateTransfer(id, transferStatusUpdateDto);
     }
+
+
 }
