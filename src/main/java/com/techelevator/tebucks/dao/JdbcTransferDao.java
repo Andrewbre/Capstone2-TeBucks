@@ -62,7 +62,7 @@ public class JdbcTransferDao implements TransferDao {
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
         try {
-//            transfer.setTransferStatus("Pending");
+            transfer.setTransferStatus("Pending");
             transfer.setTransferId(transferId);
         } catch (NullPointerException e) {
             e.getStackTrace();
