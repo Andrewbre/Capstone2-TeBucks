@@ -31,7 +31,7 @@ public class JdbcTransferDao implements TransferDao {
     public List<Transfer> getAllTransfersByUserId(int userId) {
         List<Transfer> allTransfers = new ArrayList<>();
 
-        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type FROM transfers WHERE user_id = ?;";
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type, transfer_status FROM transfers WHERE user_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         while(results.next()) {
             allTransfers.add(mapRowToTransfer(results));
@@ -44,7 +44,7 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public Transfer getTransferById(int transferId) {
-        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type FROM transfers WHERE transfer_id = ?;";
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type, transfer_status FROM transfers WHERE transfer_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
         if (result.next()) {
             return mapRowToTransfer(result);
@@ -104,7 +104,7 @@ public class JdbcTransferDao implements TransferDao {
             userTo.setBalance(userDao.getBalanceByUserId(userTo.getId()));
             if (transfer.getAmount().compareTo(userTo.getBalance()) <= 0) {
                 String sql1 = "update user set balance = ? where user_id = ? RETURNING balance";
-                String sql2 = "update transfer set transfer_status = ? where transfer_id = ?";
+                String sql2 = "update transfers set transfer_status = ? where transfer_id = ?";
                 BigDecimal addedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
                 BigDecimal subtractedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
                 SqlRowSet rowSet3 = jdbcTemplate.queryForRowSet(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
@@ -115,7 +115,7 @@ public class JdbcTransferDao implements TransferDao {
         return false;
     }
     public void rejectTransferRequest (Transfer transfer) {
-        String sql = "update transfer set transfer_status = ? where transfer_id = ?";
+        String sql = "update transfers set transfer_status = ? where transfer_id = ?";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,TRANSFER_STATUS_REJECTED,transfer.getTransferId());
 
     }
