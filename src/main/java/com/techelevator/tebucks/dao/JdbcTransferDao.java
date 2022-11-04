@@ -4,10 +4,12 @@ import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 import com.techelevator.tebucks.services.LoginService;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.tebucks.model.TransferStatusUpdateDto;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -56,6 +58,9 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer createNewTransfer(NewTransferDto newTransfer) {
 
+        if (newTransfer.getUserFrom() == newTransfer.getUserTo() || newTransfer.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         String sql = "INSERT INTO transfers (user_id, recipient_id, amount, " +
                 "transfer_type) VALUES (?, ?, ?, ?) RETURNING transfer_id;";
         Transfer transfer = mapTransferDtoToTransfer(newTransfer);
@@ -103,7 +108,7 @@ public class JdbcTransferDao implements TransferDao {
 
                 return true;
             } else {
-                return false;
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
         return false;
@@ -121,6 +126,8 @@ public class JdbcTransferDao implements TransferDao {
                 transfer.setTransferStatus(TRANSFER_STATUS_APPROVED);
                 
                 return true;
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
         return false;

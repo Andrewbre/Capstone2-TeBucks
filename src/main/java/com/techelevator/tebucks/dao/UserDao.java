@@ -10,6 +10,8 @@ public interface UserDao {
 
     List<User> findAll();
 
+    List<User> allUsersExceptCurrent(String username);
+
     User getUserById(int id);
 
     User findByUsername(String username);
