@@ -90,7 +90,7 @@ public class JdbcTransferDao implements TransferDao {
                 String sql1 = "update user set balance = ? where user_id = ?";
                 String sql2 = "update transfer set transfer_status = ? where transfer_id = ?";
                 SqlRowSet rowSet1 = jdbcTemplate.queryForRowSet(sql1,userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
-                SqlRowSet rowset2 = jdbcTemplate.queryForRowSet(sql1,userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
+                SqlRowSet rowSet2 = jdbcTemplate.queryForRowSet(sql1,userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
                 SqlRowSet rowSet3 = jdbcTemplate.queryForRowSet(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
                 return true;
             }

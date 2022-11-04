@@ -14,13 +14,10 @@ import javax.validation.Valid;
 @RestController
 public class TransferController {
     private final TransferDao transferDao;
-    private final TokenProvider tokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     public TransferController(TransferDao transferDao, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.transferDao = transferDao;
-        this.tokenProvider = tokenProvider;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
+
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,12 +38,12 @@ public class TransferController {
 
 
     @RequestMapping(path = "/api/transfer/{id}/status", method = RequestMethod.PUT)
-    public Transfer getTransferByIdStatus(@PathVariable int id, @Valid @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
+    public Transfer updateTransferByIdStatus(@PathVariable int id, @Valid @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
         TransferStatusUpdateDto input = new TransferStatusUpdateDto();
-        if (!input.getTransferStatus()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found");
-        }
-        return transferDao.updateTransfer(id, transferStatusUpdateDto);
+       if (!input.getTransferStatus()) {
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found");
+       }
+        return transferDao.updateTransfer( id,transferStatusUpdateDto);
 
     }
 }

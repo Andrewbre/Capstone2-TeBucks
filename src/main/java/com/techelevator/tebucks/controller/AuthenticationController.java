@@ -1,20 +1,27 @@
 package com.techelevator.tebucks.controller;
 
-import com.techelevator.tebucks.dao.UserDao;
-import com.techelevator.tebucks.model.LoginDto;
+import javax.validation.Valid;
+
 import com.techelevator.tebucks.model.LoginResponseDto;
-import com.techelevator.tebucks.model.RegisterUserDto;
-import com.techelevator.tebucks.model.User;
-import com.techelevator.tebucks.security.jwt.TokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.techelevator.tebucks.dao.UserDao;
+import com.techelevator.tebucks.model.LoginDto;
+import com.techelevator.tebucks.model.RegisterUserDto;
+import com.techelevator.tebucks.model.User;
+import com.techelevator.tebucks.security.jwt.TokenProvider;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
+
 
 /**
  * Controller to authenticate users.
@@ -32,7 +39,6 @@ public class AuthenticationController {
         this.userDao = userDao;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public LoginResponseDto login(@Valid @RequestBody LoginDto loginDto) {
 
@@ -54,10 +60,10 @@ public class AuthenticationController {
         if (!userDao.create(newUser.getUsername(), newUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
         }
-
     }
 
 }
+
 
 
 
