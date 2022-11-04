@@ -28,6 +28,9 @@ public class JdbcTransferDao implements TransferDao {
         this.userDao = userDao;
     }
 
+    public JdbcTransferDao() {
+    }
+
 
     @Override
     public List<Transfer> getAllTransfersByUserId(int userId) {

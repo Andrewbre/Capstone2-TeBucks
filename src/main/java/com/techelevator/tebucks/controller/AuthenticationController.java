@@ -21,8 +21,6 @@ import com.techelevator.tebucks.model.User;
 import com.techelevator.tebucks.security.jwt.TokenProvider;
 import org.springframework.web.server.ResponseStatusException;
 
-
-
 /**
  * Controller to authenticate users.
  */
