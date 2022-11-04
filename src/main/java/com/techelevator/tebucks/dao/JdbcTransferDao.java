@@ -10,7 +10,6 @@ import com.techelevator.tebucks.model.TransferStatusUpdateDto;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class JdbcTransferDao implements TransferDao {
     public List<Transfer> getAllTransfersByUserId(int userId) {
         List<Transfer> allTransfers = new ArrayList<>();
 
-        String sql = "SELECT transfer_id, user_id, recipient_id, amount, transfer_type FROM transfers WHERE user_id = ?;";
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type FROM transfers WHERE user_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         while(results.next()) {
             allTransfers.add(mapRowToTransfer(results));
@@ -47,7 +46,7 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public Transfer getTransferById(int transferId) {
-        String sql = "SELECT transfer_id, user_id, recipient_id, amount, transfer_type FROM transfers WHERE transfer_id = ?;";
+        String sql = "SELECT transfer_id, user_id, recipient_id, amount::numeric, transfer_type FROM transfers WHERE transfer_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
         if (result.next()) {
             return mapRowToTransfer(result);
@@ -64,19 +63,36 @@ public class JdbcTransferDao implements TransferDao {
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
         try {
+//            transfer.setTransferStatus("Pending");
             transfer.setTransferId(transferId);
         } catch (NullPointerException e) {
             e.getStackTrace();
+            return null;
+        }
+        if (transfer.getTransferType().equals("Send")) {
+            if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
+                return transfer;
+            } else {
+                return null;
+            }
+        } else {
+
         }
         return transfer;
     }
+
     public boolean completeTransferSend (Transfer transfer, User userFrom, User userTo) {
         if (transfer.getTransferType().equals("Send")) {
+            userFrom.setBalance(userDao.getBalanceByUserId(userFrom.getId()));
+            userTo.setBalance(userDao.getBalanceByUserId(userTo.getId()));
             if ( transfer.getAmount().compareTo(userFrom.getBalance()) <= 0) {
-                String sql = "update user set balance = ? where user_id = ?";
-                String sql2 = "update user set balance = ? where user_id = ?";
-                SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
-                SqlRowSet rowSet2 = jdbcTemplate.queryForRowSet(sql,userTo.getBalance().add(transfer.getAmount()),userTo.getId());
+                String sql = "update users set balance = ? where user_id = ? RETURNING balance::numeric";
+                String sql2 = "update users set balance = ? where user_id = ? RETURNING balance::numeric";
+                BigDecimal userFromBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
+                BigDecimal userToBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userTo.getBalance().add(transfer.getAmount()),userTo.getId());
+                transfer.setTransferStatus("Approved");
+                userFrom.setBalance(userFrom.getBalance().subtract(transfer.getAmount()));
+                userTo.setBalance(userTo.getBalance().add(transfer.getAmount()));
                 return true;
             } else {
                 return false;
@@ -87,10 +103,12 @@ public class JdbcTransferDao implements TransferDao {
     public boolean approveTransferRequest (Transfer transfer, User userFrom, User userTo) {
         if (transfer.getTransferType().equals("Request")) {
             if (transfer.getAmount().compareTo(userTo.getBalance()) <= 0) {
-                String sql1 = "update user set balance = ? where user_id = ?";
+                String sql1 = "update user set balance = ? where user_id = ? RETURNING balance";
                 String sql2 = "update transfer set transfer_status = ? where transfer_id = ?";
                 SqlRowSet rowSet1 = jdbcTemplate.queryForRowSet(sql1,userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
                 SqlRowSet rowSet2 = jdbcTemplate.queryForRowSet(sql1,userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
+                BigDecimal addedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
+                BigDecimal subtractedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
                 SqlRowSet rowSet3 = jdbcTemplate.queryForRowSet(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
                 return true;
             }
@@ -104,7 +122,11 @@ public class JdbcTransferDao implements TransferDao {
     }
     @Override
     public Transfer updateTransfer(int id, TransferStatusUpdateDto transferStatusUpdateDto) {
-        return null;
+
+        String sql = "UPDATE transfers SET transfer_status = ? WHERE transfer_id = ? RETURNING transfer_id, user_id, " +
+                "recipient_id, amount, transfer_type, transfer_status;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferStatusUpdateDto.getTransferStatus(), id);
+        return mapRowToTransfer(results);
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rowSet) {
@@ -114,6 +136,7 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setUserTo(userDao.getUserById(rowSet.getInt("recipient_id")));
         transfer.setAmount(rowSet.getBigDecimal("amount"));
         transfer.setTransferType(rowSet.getString("transfer_type"));
+        transfer.setTransferStatus(rowSet.getString("transfer_status"));
         return transfer;
     }
 

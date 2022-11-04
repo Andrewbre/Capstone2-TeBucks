@@ -1,6 +1,7 @@
 package com.techelevator.tebucks.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -18,23 +19,18 @@ public class User {
    private Set<Authority> authorities = new HashSet<>();
    private BigDecimal balance;
 
-   public User() { }
+   public User() {
+      this.balance = new BigDecimal("1000.00");
+   }
 
    public User(int id, String username, String password, String authorities) {
       this.id = id;
       this.username = username;
       this.password = password;
+      this.balance = new BigDecimal("1000.00");
       if(authorities != null) this.setAuthorities(authorities);
       this.activated = true;
-   }
 
-   public User(int id, String username, String password, boolean activated, Set<Authority> authorities, BigDecimal balance) {
-      this.id = id;
-      this.username = username;
-      this.password = password;
-      this.activated = activated;
-      if (authorities != null) this.setAuthorities(authorities);
-      this.balance = balance;
    }
 
    public BigDecimal getBalance() {
