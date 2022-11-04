@@ -32,11 +32,9 @@ public class UserController {
     }
 
     @GetMapping("/api/users")
-    public List<User> getAllUsers() {
-        return dao.findAll();
+    public List<User> getAllUsers(Principal principal) {
+        return dao.allUsersExceptCurrent(principal.getName());
     }
-
-
 
     @RequestMapping(path = "/api/account/transfers", method = RequestMethod.GET)
     public List<Transfer> getAccountTransfers(Principal principal) {

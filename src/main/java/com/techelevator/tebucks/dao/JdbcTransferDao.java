@@ -3,10 +3,12 @@ package com.techelevator.tebucks.dao;
 import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.tebucks.model.TransferStatusUpdateDto;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -55,11 +57,15 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer createNewTransfer(NewTransferDto newTransfer) {
 
+        if (newTransfer.getUserFrom() == newTransfer.getUserTo() || newTransfer.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         String sql = "INSERT INTO transfers (user_id, recipient_id, amount, " +
                 "transfer_type) VALUES (?, ?, ?, ?) RETURNING transfer_id;";
         Transfer transfer = mapTransferDtoToTransfer(newTransfer);
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, newTransfer.getUserFrom(),
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
+
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_SEND)) {
             if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
                 transfer.setTransferId(transferId);
@@ -97,7 +103,7 @@ public class JdbcTransferDao implements TransferDao {
                 userTo.setBalance(userTo.getBalance().add(transfer.getAmount()));
                 return true;
             } else {
-                return false;
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
         return false;
@@ -106,7 +112,7 @@ public class JdbcTransferDao implements TransferDao {
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_REQUEST)) {
             userFrom.setBalance(userDao.getBalanceByUserId(userFrom.getId()));
             userTo.setBalance(userDao.getBalanceByUserId(userTo.getId()));
-            if (transfer.getAmount().compareTo(userTo.getBalance()) <= 0) {
+            if (transfer.getAmount().compareTo(userFrom.getBalance()) <= 0) {
                 String sql1 = "update users set balance = ? where user_id = ? RETURNING balance::numeric";
                 String sql2 = "update transfers set transfer_status = ? where transfer_id = ?";
                 BigDecimal addedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userFrom.getBalance().subtract(transfer.getAmount()),userFrom.getId());
@@ -114,6 +120,8 @@ public class JdbcTransferDao implements TransferDao {
                 jdbcTemplate.update(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
                 transfer.setTransferStatus(TRANSFER_STATUS_APPROVED);
                 return true;
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
         return false;
