@@ -34,9 +34,10 @@ public class TransferController {
 
     @RequestMapping(path = "/api/transfers/{id}/status", method = RequestMethod.PUT)
     public Transfer updateTransferByIdStatus(@PathVariable int id, @Valid @RequestBody TransferStatusUpdateDto transferStatusUpdateDto) {
-//        if (!input.getTransferStatus()) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found");
-//        }
+
+        if (transferStatusUpdateDto.getTransferStatus().equals("Rejected")) {
+
+        }
         return transferDao.updateTransfer(id, transferStatusUpdateDto);
 
     }

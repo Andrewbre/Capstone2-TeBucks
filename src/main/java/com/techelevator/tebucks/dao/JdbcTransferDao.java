@@ -125,7 +125,15 @@ public class JdbcTransferDao implements TransferDao {
         String sql = "UPDATE transfers SET transfer_status = ? WHERE transfer_id = ? RETURNING transfer_id, user_id, " +
                 "recipient_id, amount, transfer_type, transfer_status;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferStatusUpdateDto.getTransferStatus(), id);
-        return mapRowToTransfer(results);
+        Transfer transfer = mapRowToTransfer(results);
+        if (transfer.getTransferStatus().equals(TRANSFER_STATUS_REJECTED)) {
+            rejectTransferRequest(transfer);
+            return transfer;
+        } else if (transfer.getTransferStatus().equals(TRANSFER_STATUS_APPROVED)) {
+            approveTransferRequest(transfer, transfer.getUserFrom(), transfer.getUserTo());
+            return transfer;
+        }
+        return null;
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rowSet) {
