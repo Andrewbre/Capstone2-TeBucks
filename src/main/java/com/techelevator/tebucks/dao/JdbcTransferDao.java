@@ -68,7 +68,7 @@ public class JdbcTransferDao implements TransferDao {
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
         if (transfer.getAmount().compareTo( BigDecimal.valueOf(1000)) >= 0) {
             LoginService login = new LoginService();
-            login.addTransfer(transfer);
+            login.addTransfer(transfer).setDescription("Transaction over 1000");
         }
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_SEND)) {
             if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
