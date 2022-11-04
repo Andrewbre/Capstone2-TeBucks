@@ -62,6 +62,10 @@ public class JdbcTransferDao implements TransferDao {
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
         try {
             transfer.setTransferStatus("Pending");
+            if (transfer.getTransferType().equals("Request")) {
+                String sql2 = "Update transfers set transfer_status = ? where transfer_id = ?";
+                jdbcTemplate.update(sql2,TRANSFER_STATUS_PENDING,transfer.getTransferId());
+            }
             transfer.setTransferId(transferId);
         } catch (NullPointerException e) {
             e.getStackTrace();
@@ -104,7 +108,7 @@ public class JdbcTransferDao implements TransferDao {
             userTo.setBalance(userDao.getBalanceByUserId(userTo.getId()));
             if (transfer.getAmount().compareTo(userTo.getBalance()) <= 0) {
                 String sql1 = "update user set balance = ? where user_id = ? RETURNING balance";
-                String sql2 = "update transfer set transfer_status = ? where transfer_id = ?";
+                String sql2 = "update transfers set transfer_status = ? where transfer_id = ?";
                 BigDecimal addedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userFrom.getBalance().add(transfer.getAmount()),userFrom.getId());
                 BigDecimal subtractedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userTo.getBalance().subtract(transfer.getAmount()),userTo.getId());
                 SqlRowSet rowSet3 = jdbcTemplate.queryForRowSet(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
