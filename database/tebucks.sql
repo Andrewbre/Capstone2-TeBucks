@@ -44,3 +44,5 @@ CREATE TABLE requests (
 
 COMMIT;
 
+select * from transfers;
+
