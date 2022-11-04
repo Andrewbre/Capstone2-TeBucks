@@ -5,6 +5,8 @@ import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.User;
 import org.springframework.http.HttpStatus;
 import com.techelevator.tebucks.services.LoginService;
+import com.techelevator.tebucks.services.LoginService;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.tebucks.model.TransferStatusUpdateDto;
@@ -68,7 +70,7 @@ public class JdbcTransferDao implements TransferDao {
                 newTransfer.getUserTo(), newTransfer.getAmount(), newTransfer.getTransferType());
         if (transfer.getAmount().compareTo( BigDecimal.valueOf(1000)) >= 0) {
             LoginService login = new LoginService();
-            login.addTransfer(transfer);
+            login.addTransfer(transfer).setDescription("Transaction over 1000");
         }
         if (transfer.getTransferType().equalsIgnoreCase(TRANSFER_TYPE_SEND)) {
             if (completeTransferSend(transfer, transfer.getUserFrom(), transfer.getUserTo())) {
