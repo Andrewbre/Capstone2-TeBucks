@@ -22,7 +22,7 @@ public class Transfer {
         this.transferStatus = transferStatus;
         this.userFrom = userFrom;
         this.userTo = userTo;
-        this.amount = amount;
+        this.amount = BigDecimal.valueOf(1000.00);
         this.loggedTime = loggedTime;
     }
 
@@ -89,22 +89,22 @@ public class Transfer {
     }
 
 	public boolean isApproved() {
-        return this.transferStatus.equals(TRANSFER_STATUS_APPROVED);
+        return this.transferStatus.equalsIgnoreCase(TRANSFER_STATUS_APPROVED);
 	}
 	
 	public boolean isRejected() {
-		return this.transferStatus.equals(TRANSFER_STATUS_REJECTED);
+		return this.transferStatus.equalsIgnoreCase(TRANSFER_STATUS_REJECTED);
 	}
 	
 	public boolean isPending() {
-		return this.transferStatus.equals(TRANSFER_STATUS_PENDING);
+		return this.transferStatus.equalsIgnoreCase(TRANSFER_STATUS_PENDING);
 	}
 	
 	public boolean isRequestType() {
-		return this.transferType.equals(TRANSFER_TYPE_REQUEST);
+		return this.transferType.equalsIgnoreCase(TRANSFER_TYPE_REQUEST);
 	}
 	
 	public boolean isSendType() {
-		return this.transferType.equals(TRANSFER_TYPE_SEND);
+		return this.transferType.equalsIgnoreCase(TRANSFER_TYPE_SEND);
 	}
 }
