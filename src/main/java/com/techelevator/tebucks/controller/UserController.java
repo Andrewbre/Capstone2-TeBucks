@@ -21,8 +21,9 @@ public class UserController {
     UserDao dao;
     TransferDao dao2;
 
-    public UserController(JdbcUserDao dao) {
+    public UserController(JdbcUserDao dao, TransferDao dao2) {
         this.dao = dao;
+        this.dao2 = dao2;
     }
 
     @GetMapping("/api/account/balance")
@@ -31,11 +32,9 @@ public class UserController {
     }
 
     @GetMapping("/api/users")
-    public List<User> getAllUsers() {
-        return dao.findAll();
+    public List<User> getAllUsers(Principal principal) {
+        return dao.allUsersExceptCurrent(principal.getName());
     }
-
-
 
     @RequestMapping(path = "/api/account/transfers", method = RequestMethod.GET)
     public List<Transfer> getAccountTransfers(Principal principal) {
