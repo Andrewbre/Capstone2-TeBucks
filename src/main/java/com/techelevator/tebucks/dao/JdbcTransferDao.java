@@ -20,15 +20,15 @@ import static com.techelevator.tebucks.model.Transfer.TRANSFER_STATUS_REJECTED;
 @Component
 public class JdbcTransferDao implements TransferDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final JdbcUserDao userDao;
+    private JdbcTemplate jdbcTemplate;
+    private JdbcUserDao userDao;
 
     public JdbcTransferDao(DataSource dataSource, JdbcUserDao userDao) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.userDao = userDao;
     }
 
-    public JdbcTransferDao() {
+    public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
     }
 
 

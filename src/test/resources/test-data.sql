@@ -19,21 +19,11 @@ COMMIT TRANSACTION;
 
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS users2;
-
-CREATE TABLE users2 (
-	user_id serial NOT NULL,
-	username varchar(50) UNIQUE NOT NULL,
-	password_hash varchar(200) NOT NULL,
-	role varchar(20),
-	balance money NOT NULL DEFAULT 1000.00,
-	CONSTRAINT pk_users PRIMARY KEY (user_id),
-	CONSTRAINT uq_username UNIQUE (username)
 );
 
 DROP TABLE IF EXISTS transactions2;
 
-CREATE TABLE transactions2 (
+CREATE TABLE transactions (
 
 	transaction_id serial NOT NULL,
 	user_id int NOT NULL ,
@@ -50,8 +40,10 @@ CREATE TABLE transactions2 (
 
 );
 
-INSERT INTO transaction2 (transferId, userTo, userFrom, amount, transferType, transferStatus) VALUES (1,'User1', 'User4', 100,'Send','Approved'); -- 1
-INSERT INTO transaction2 (transferId, userTo, userFrom, amount, transferType, transferStatus) VALUES (2, 'User2', 'User5', -20,'Request', 'Pending'); -- 2
-INSERT INTO transaction2 (TransferId, userTo, userFrom, amount, transferType, transferStatus) VALUES (3, 'User3', 'User6', 100.25,'Send', 'Rejected'); -- 3
+INSERT INTO transactions (transferId, userTo, userFrom, amount, transferType, transferStatus) VALUES ('TransferId','User1', 'User4', 'Amount','Send','Approved'); -- 1
+INSERT INTO transactions (transferId, userTo, userFrom, amount, transferType, transferStatus) VALUES ('TransferId', 'User2', 'User5', 'Amount','Request', 'Pending'); -- 2
+INSERT INTO transactions (TransferId, userTo, userFrom, amount, transferType, transferStatus) VALUES ('TransferId', 'User3', 'User6', 'Amount','Send', 'Rejected'); -- 3
+
+
 COMMIT TRANSACTION;
 
