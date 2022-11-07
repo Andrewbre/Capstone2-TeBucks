@@ -12,6 +12,12 @@ public class Transfer {
     private BigDecimal amount;
     private LocalDate loggedTime;
 
+    public static final String TRANSFER_TYPE_REQUEST = "Request";
+    public static final String TRANSFER_TYPE_SEND = "Send";
+    public static final String TRANSFER_STATUS_PENDING = "Pending";
+    public static final String TRANSFER_STATUS_APPROVED = "Approved";
+    public static final String TRANSFER_STATUS_REJECTED = "Rejected";
+
     //edited transaction class as many fields in transfer covered our intended transaction fields
 
 
@@ -22,7 +28,7 @@ public class Transfer {
         this.transferStatus = transferStatus;
         this.userFrom = userFrom;
         this.userTo = userTo;
-        this.amount = BigDecimal.valueOf(1000.00);
+        this.amount = amount;
         this.loggedTime = loggedTime;
     }
 
@@ -57,12 +63,6 @@ public class Transfer {
     public void setLoggedTime(LocalDate loggedTime) {
         this.loggedTime = loggedTime;
     }
-
-    public static final String TRANSFER_TYPE_REQUEST = "Request";
-    public static final String TRANSFER_TYPE_SEND = "Send";
-    public static final String TRANSFER_STATUS_PENDING = "Pending";
-    public static final String TRANSFER_STATUS_APPROVED = "Approved";
-    public static final String TRANSFER_STATUS_REJECTED = "Rejected";
 
 	public int getTransferId() {
         return transferId;

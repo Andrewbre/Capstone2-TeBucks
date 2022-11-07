@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.tebucks.model.TransferStatusUpdateDto;
-
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,15 +23,12 @@ import static com.techelevator.tebucks.model.Transfer.*;
 @Component
 public class JdbcTransferDao implements TransferDao {
 
-    private JdbcTemplate jdbcTemplate;
-    private JdbcUserDao userDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final JdbcUserDao userDao;
 
     public JdbcTransferDao(DataSource dataSource, JdbcUserDao userDao) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.userDao = userDao;
-    }
-
-    public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
     }
 
 
@@ -143,7 +139,7 @@ public class JdbcTransferDao implements TransferDao {
                 BigDecimal subtractedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userTo.getBalance().add(transfer.getAmount()),userTo.getId());
                 jdbcTemplate.update(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
                 transfer.setTransferStatus(TRANSFER_STATUS_APPROVED);
-                
+
                 return true;
             } else {
                 LoginService login = new LoginService();
@@ -197,7 +193,6 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
-
     private Transfer mapTransferDtoToTransfer(NewTransferDto dto) {
         Transfer transfer = new Transfer();
         transfer.setUserFrom(userDao.getUserById(dto.getUserFrom()));
@@ -206,7 +201,6 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setTransferType(dto.getTransferType());
         return transfer;
     }
-
 
 }
 
