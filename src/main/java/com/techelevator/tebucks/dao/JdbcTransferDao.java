@@ -139,7 +139,7 @@ public class JdbcTransferDao implements TransferDao {
                 BigDecimal subtractedBalance = jdbcTemplate.queryForObject(sql1, BigDecimal.class, userTo.getBalance().add(transfer.getAmount()),userTo.getId());
                 jdbcTemplate.update(sql2,TRANSFER_STATUS_APPROVED,transfer.getTransferId());
                 transfer.setTransferStatus(TRANSFER_STATUS_APPROVED);
-                
+
                 return true;
             } else {
                 LoginService login = new LoginService();
